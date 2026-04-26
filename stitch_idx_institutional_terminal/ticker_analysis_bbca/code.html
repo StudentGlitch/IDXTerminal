@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ticker Dashboard - BBCA</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#4b4263",
+                      "surface-container-high": "#2b292f",
+                      "on-tertiary-container": "#503d00",
+                      "tertiary": "#e7c365",
+                      "on-background": "#e6e0e9",
+                      "on-tertiary-fixed-variant": "#594400",
+                      "primary-fixed-dim": "#cfbcff",
+                      "tertiary-container": "#c9a74d",
+                      "primary-container": "#6750a4",
+                      "surface": "#141218",
+                      "on-error": "#690005",
+                      "on-primary-fixed-variant": "#4f378a",
+                      "inverse-surface": "#e6e0e9",
+                      "tertiary-fixed": "#ffdf93",
+                      "on-primary-container": "#e0d2ff",
+                      "on-secondary-container": "#bfb2da",
+                      "outline": "#948e9c",
+                      "on-primary": "#381e72",
+                      "surface-variant": "#36343a",
+                      "tertiary-fixed-dim": "#e7c365",
+                      "surface-bright": "#3b383e",
+                      "outline-variant": "#494551",
+                      "secondary": "#cdc0e9",
+                      "surface-container": "#211f24",
+                      "secondary-fixed": "#e9ddff",
+                      "background": "#141218",
+                      "inverse-primary": "#6750a4",
+                      "on-secondary-fixed": "#1f1635",
+                      "on-surface": "#e6e0e9",
+                      "on-primary-fixed": "#22005d",
+                      "surface-container-highest": "#36343a",
+                      "on-error-container": "#ffdad6",
+                      "secondary-fixed-dim": "#cdc0e9",
+                      "on-surface-variant": "#cbc4d2",
+                      "on-tertiary": "#3e2e00",
+                      "surface-tint": "#cfbcff",
+                      "inverse-on-surface": "#322f35",
+                      "primary-fixed": "#e9ddff",
+                      "surface-container-lowest": "#0f0d13",
+                      "error-container": "#93000a",
+                      "secondary-container": "#4d4465",
+                      "on-tertiary-fixed": "#241a00",
+                      "on-secondary": "#342b4b",
+                      "surface-container-low": "#1d1b20",
+                      "error": "#ffb4ab",
+                      "primary": "#cfbcff",
+                      "surface-dim": "#141218"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-padding": "12px",
+                      "gutter": "1px",
+                      "unit": "4px",
+                      "cell-padding-y": "4px",
+                      "cell-padding-x": "8px"
+              },
+              "fontFamily": {
+                      "display": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "data-mono-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "ui-small": [
+                              "Inter"
+                      ],
+                      "ui-medium": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "data-mono-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "14px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-small": [
+                              "11px",
+                              {
+                                      "lineHeight": "14px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-medium": [
+                              "13px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col font-ui-medium text-ui-medium antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Shared Component: TopNavBar -->
+<nav class="docked full-width top-0 h-12 border-b border-zinc-800 flex justify-between items-center w-full px-3 gap-6 bg-zinc-950 font-['Inter'] text-[13px] tracking-tight antialiased shrink-0 z-50">
+<div class="flex items-center gap-6 h-full">
+<div class="font-bold text-zinc-50 tracking-tighter text-lg uppercase">IDX TERMINAL</div>
+<div class="relative flex items-center h-full">
+<span class="material-symbols-outlined absolute left-2 text-zinc-400 pointer-events-none" style="font-size: 16px;">search</span>
+<input class="bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs pl-8 pr-2 py-1.5 focus:border-blue-500 focus:outline-none transition-colors w-64 placeholder:text-zinc-600 rounded-none" placeholder="Search ticker or company..." type="text"/>
+</div>
+</div>
+<div class="flex h-full items-center gap-2">
+<a class="text-zinc-400 font-medium hover:text-zinc-200 hover:bg-zinc-900 transition-colors duration-150 cursor-pointer active:opacity-80 px-3 h-full flex items-center">Screener</a>
+<a class="text-zinc-400 font-medium hover:text-zinc-200 hover:bg-zinc-900 transition-colors duration-150 cursor-pointer active:opacity-80 px-3 h-full flex items-center">Watchlist</a>
+<a class="text-zinc-400 font-medium hover:text-zinc-200 hover:bg-zinc-900 transition-colors duration-150 cursor-pointer active:opacity-80 px-3 h-full flex items-center">Sectors</a>
+<a class="text-zinc-400 font-medium hover:text-zinc-200 hover:bg-zinc-900 transition-colors duration-150 cursor-pointer active:opacity-80 px-3 h-full flex items-center">Analytics</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1">
+<button class="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 p-1.5 transition-colors duration-150 cursor-pointer active:opacity-80 flex items-center justify-center rounded-none border-none">
+<span class="material-symbols-outlined" style="font-size: 18px;">notifications</span>
+</button>
+<button class="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 p-1.5 transition-colors duration-150 cursor-pointer active:opacity-80 flex items-center justify-center rounded-none border-none">
+<span class="material-symbols-outlined" style="font-size: 18px;">settings</span>
+</button>
+</div>
+<button class="bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs px-4 py-1.5 transition-colors cursor-pointer active:opacity-80 rounded-none border-none">
+                Execute Trade
+            </button>
+</div>
+</nav>
+<!-- Ticker Tape Component -->
+<div class="h-7 shrink-0 bg-surface-container-lowest flex items-center overflow-hidden border-b border-surface-container-high px-3 gap-8 select-none font-data-mono-sm text-data-mono-sm whitespace-nowrap">
+<div class="flex items-center gap-2 cursor-default"><span class="text-on-surface-variant">IHSG</span><span class="text-on-surface">7,245.12</span><span class="text-emerald-400 flex items-center"><span class="material-symbols-outlined" style="font-size: 12px; margin-right: -2px;">arrow_drop_up</span>0.45%</span></div>
+<div class="flex items-center gap-2 cursor-default"><span class="text-on-surface-variant">BBRI</span><span class="text-on-surface">5,450</span><span class="text-emerald-400 flex items-center"><span class="material-symbols-outlined" style="font-size: 12px; margin-right: -2px;">arrow_drop_up</span>1.20%</span></div>
+<div class="flex items-center gap-2 cursor-default bg-surface-container-highest px-2 py-0.5"><span class="text-on-surface-variant font-bold">BBCA</span><span class="text-on-surface">10,200</span><span class="text-emerald-400 flex items-center"><span class="material-symbols-outlined" style="font-size: 12px; margin-right: -2px;">arrow_drop_up</span>1.50%</span></div>
+<div class="flex items-center gap-2 cursor-default"><span class="text-on-surface-variant">TLKM</span><span class="text-on-surface">3,890</span><span class="text-rose-500 flex items-center"><span class="material-symbols-outlined" style="font-size: 12px; margin-right: -2px;">arrow_drop_down</span>0.80%</span></div>
+<div class="flex items-center gap-2 cursor-default"><span class="text-on-surface-variant">BMRI</span><span class="text-on-surface">6,200</span><span class="text-on-surface-variant flex items-center px-1">0.00%</span></div>
+<div class="flex items-center gap-2 cursor-default"><span class="text-on-surface-variant">ASII</span><span class="text-on-surface">5,125</span><span class="text-emerald-400 flex items-center"><span class="material-symbols-outlined" style="font-size: 12px; margin-right: -2px;">arrow_drop_up</span>0.50%</span></div>
+<div class="flex items-center gap-2 cursor-default"><span class="text-on-surface-variant">BBNI</span><span class="text-on-surface">5,350</span><span class="text-rose-500 flex items-center"><span class="material-symbols-outlined" style="font-size: 12px; margin-right: -2px;">arrow_drop_down</span>1.10%</span></div>
+</div>
+<!-- Main Application Canvas (Grid Based) -->
+<main class="flex-1 flex flex-col p-gutter bg-surface-container-high gap-gutter overflow-hidden">
+<!-- Top Pane: Dashboard Header -->
+<section class="bg-surface flex items-center justify-between px-4 py-3 shrink-0">
+<div class="flex items-end gap-4">
+<h1 class="font-display text-display text-on-surface m-0 leading-none">BBCA</h1>
+<div class="flex flex-col gap-0.5 justify-end pb-px">
+<span class="font-ui-medium text-ui-medium text-on-surface leading-none">Bank Central Asia Tbk.</span>
+<span class="font-ui-small text-ui-small text-on-surface-variant leading-none mt-1">Financials / Banks</span>
+</div>
+<div class="ml-4 flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-ui-small text-ui-small uppercase tracking-wider mb-px">
+<span class="w-1.5 h-1.5 bg-emerald-400 block rounded-none"></span>
+                    LONG MKT
+                </div>
+</div>
+<div class="flex items-end gap-8 font-data-mono text-data-mono">
+<div class="flex flex-col items-end gap-1">
+<span class="font-ui-small text-ui-small text-on-surface-variant uppercase tracking-widest leading-none">Last Price</span>
+<span class="text-on-surface text-lg leading-none font-bold">10,200.00</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="font-ui-small text-ui-small text-on-surface-variant uppercase tracking-widest leading-none">Day Change</span>
+<span class="text-emerald-400 flex items-center leading-none font-bold"><span class="material-symbols-outlined" style="font-size: 16px; margin-right: -2px;">arrow_drop_up</span>150.00 (1.50%)</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="font-ui-small text-ui-small text-on-surface-variant uppercase tracking-widest leading-none">Volume</span>
+<span class="text-on-surface leading-none">45.2M</span>
+</div>
+<div class="flex flex-col items-end gap-1 border-l border-surface-container-high pl-6 ml-2">
+<span class="font-ui-small text-ui-small text-on-surface-variant uppercase tracking-widest leading-none">Turnover</span>
+<span class="text-on-surface leading-none">461.0B</span>
+</div>
+</div>
+</section>
+<!-- Middle Panes: Chart & Valuation Matrix -->
+<section class="flex gap-gutter h-[380px] shrink-0">
+<!-- Left Pane: Chart Widget -->
+<div class="bg-surface flex-[2.2] flex flex-col min-w-0">
+<header class="flex justify-between items-center px-4 py-2 border-b border-surface-container-high shrink-0">
+<div class="flex items-center gap-6">
+<span class="font-ui-medium text-ui-medium text-on-surface font-semibold uppercase tracking-wider">Price Action</span>
+<div class="flex items-center bg-surface-container border border-surface-container-high rounded-none p-0.5">
+<button class="px-2 py-0.5 text-primary bg-primary/10 font-ui-small text-ui-small cursor-default rounded-none">1D</button>
+<button class="px-2 py-0.5 text-on-surface-variant hover:text-on-surface font-ui-small text-ui-small cursor-pointer transition-colors rounded-none">1W</button>
+<button class="px-2 py-0.5 text-on-surface-variant hover:text-on-surface font-ui-small text-ui-small cursor-pointer transition-colors rounded-none">1M</button>
+<button class="px-2 py-0.5 text-on-surface-variant hover:text-on-surface font-ui-small text-ui-small cursor-pointer transition-colors rounded-none">YTD</button>
+</div>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="font-data-mono-sm text-data-mono-sm mr-2">O: 10,050 H: 10,250 L: 10,025 C: 10,200</span>
+<div class="w-px h-4 bg-surface-container-high"></div>
+<button class="hover:text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 16px;">candlestick_chart</span>
+</button>
+<button class="hover:text-on-surface transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 16px;">show_chart</span>
+</button>
+</div>
+</header>
+<div class="flex-1 relative bg-surface-container-lowest/50 flex flex-col font-data-mono-sm text-data-mono-sm text-on-surface-variant overflow-hidden cursor-crosshair">
+<!-- Y Axis -->
+<div class="absolute right-0 top-0 bottom-6 w-14 border-l border-surface-container-high bg-surface flex flex-col justify-between py-4 items-end pr-2 z-10">
+<span>10,400</span>
+<span>10,200</span>
+<span>10,000</span>
+<span>9,800</span>
+<span>9,600</span>
+<span>9,400</span>
+</div>
+<!-- X Axis -->
+<div class="absolute right-14 left-0 bottom-0 h-6 border-t border-surface-container-high bg-surface flex justify-between px-6 items-center z-10">
+<span>09:00</span>
+<span>10:00</span>
+<span>11:30</span>
+<span>13:30</span>
+<span>14:30</span>
+<span>15:00</span>
+</div>
+<!-- Chart Grid -->
+<div class="absolute inset-0 right-14 bottom-6 pointer-events-none">
+<div class="absolute top-[16.6%] left-0 right-0 h-px bg-surface-container-high/40"></div>
+<div class="absolute top-[33.3%] left-0 right-0 h-px bg-surface-container-high/40"></div>
+<div class="absolute top-[50%] left-0 right-0 h-px bg-surface-container-high/40"></div>
+<div class="absolute top-[66.6%] left-0 right-0 h-px bg-surface-container-high/40"></div>
+<div class="absolute top-[83.3%] left-0 right-0 h-px bg-surface-container-high/40"></div>
+<div class="absolute left-[20%] top-0 bottom-0 w-px bg-surface-container-high/40"></div>
+<div class="absolute left-[40%] top-0 bottom-0 w-px bg-surface-container-high/40"></div>
+<div class="absolute left-[60%] top-0 bottom-0 w-px bg-surface-container-high/40"></div>
+<div class="absolute left-[80%] top-0 bottom-0 w-px bg-surface-container-high/40"></div>
+</div>
+<!-- Current Price Line Marker -->
+<div class="absolute top-[33.3%] left-0 right-0 z-0 pointer-events-none">
+<div class="w-full h-px border-t border-dashed border-emerald-400/50"></div>
+<div class="absolute right-0 top-1/2 -translate-y-1/2 bg-emerald-500 text-surface font-bold px-1 py-0.5 text-[10px] w-14 text-right">10,200</div>
+</div>
+<!-- CSS Candlesticks Pattern -->
+<div class="absolute inset-0 right-14 bottom-6 flex items-end justify-between px-8 pb-4 pt-10">
+<div class="w-2 h-[40%] bg-rose-500 relative mb-[20%]"><div class="absolute w-px h-[140%] bg-rose-500 left-1/2 -translate-x-1/2 -top-[20%]"></div></div>
+<div class="w-2 h-[25%] bg-emerald-400 relative mb-[15%]"><div class="absolute w-px h-[160%] bg-emerald-400 left-1/2 -translate-x-1/2 -top-[30%]"></div></div>
+<div class="w-2 h-[50%] bg-emerald-400 relative mb-[20%]"><div class="absolute w-px h-[120%] bg-emerald-400 left-1/2 -translate-x-1/2 -top-[10%]"></div></div>
+<div class="w-2 h-[15%] bg-rose-500 relative mb-[60%]"><div class="absolute w-px h-[200%] bg-rose-500 left-1/2 -translate-x-1/2 -top-[50%]"></div></div>
+<div class="w-2 h-[30%] bg-rose-500 relative mb-[55%]"><div class="absolute w-px h-[130%] bg-rose-500 left-1/2 -translate-x-1/2 -top-[15%]"></div></div>
+<div class="w-2 h-[45%] bg-emerald-400 relative mb-[40%]"><div class="absolute w-px h-[150%] bg-emerald-400 left-1/2 -translate-x-1/2 -top-[25%]"></div></div>
+<div class="w-2 h-[20%] bg-emerald-400 relative mb-[75%]"><div class="absolute w-px h-[180%] bg-emerald-400 left-1/2 -translate-x-1/2 -top-[40%]"></div></div>
+<div class="w-2 h-[10%] bg-rose-500 relative mb-[85%]"><div class="absolute w-px h-[250%] bg-rose-500 left-1/2 -translate-x-1/2 -top-[75%]"></div></div>
+<div class="w-2 h-[35%] bg-emerald-400 relative mb-[65%]"><div class="absolute w-px h-[140%] bg-emerald-400 left-1/2 -translate-x-1/2 -top-[20%]"></div></div>
+<div class="w-2 h-[60%] bg-emerald-400 relative mb-[70%]"><div class="absolute w-px h-[110%] bg-emerald-400 left-1/2 -translate-x-1/2 -top-[5%]"></div></div>
+</div>
+<!-- Volume Bars -->
+<div class="absolute left-0 right-14 bottom-6 h-16 flex items-end justify-between px-8 opacity-40 pointer-events-none">
+<div class="w-2 h-[60%] bg-rose-500"></div>
+<div class="w-2 h-[30%] bg-emerald-400"></div>
+<div class="w-2 h-[80%] bg-emerald-400"></div>
+<div class="w-2 h-[40%] bg-rose-500"></div>
+<div class="w-2 h-[50%] bg-rose-500"></div>
+<div class="w-2 h-[90%] bg-emerald-400"></div>
+<div class="w-2 h-[45%] bg-emerald-400"></div>
+<div class="w-2 h-[20%] bg-rose-500"></div>
+<div class="w-2 h-[70%] bg-emerald-400"></div>
+<div class="w-2 h-[100%] bg-emerald-400"></div>
+</div>
+</div>
+</div>
+<!-- Right Pane: Valuation Summary -->
+<div class="bg-surface flex-1 flex flex-col min-w-0">
+<header class="px-4 py-2 border-b border-surface-container-high shrink-0 flex justify-between items-center">
+<span class="font-ui-medium text-ui-medium text-on-surface font-semibold uppercase tracking-wider">Valuation Matrix</span>
+<button class="hover:text-on-surface text-on-surface-variant transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 16px;">more_horiz</span>
+</button>
+</header>
+<div class="p-5 flex flex-col gap-6 flex-1 overflow-y-auto">
+<!-- Gauge Items -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between font-ui-small text-ui-small items-end">
+<span class="text-on-surface-variant uppercase tracking-wide">Market Price</span>
+<span class="text-on-surface font-data-mono font-bold">10,200</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container relative">
+<div class="absolute left-0 top-0 h-full bg-on-surface-variant w-[60%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between font-ui-small text-ui-small items-end">
+<span class="text-on-surface-variant uppercase tracking-wide">DCF Base Case</span>
+<span class="text-emerald-400 font-data-mono font-bold">11,500</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container relative">
+<div class="absolute left-0 top-0 h-full bg-emerald-500 w-[75%]"></div>
+<div class="absolute left-[60%] top-0 bottom-0 w-px bg-surface bg-surface-container-highest z-10"></div> <!-- Market price marker -->
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between font-ui-small text-ui-small items-end">
+<span class="text-on-surface-variant uppercase tracking-wide">RIM Model</span>
+<span class="text-emerald-400 font-data-mono font-bold">10,800</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container relative">
+<div class="absolute left-0 top-0 h-full bg-emerald-500 w-[68%]"></div>
+<div class="absolute left-[60%] top-0 bottom-0 w-px bg-surface-container-highest z-10"></div>
+</div>
+</div>
+<!-- Assumptions Grid -->
+<div class="grid grid-cols-2 gap-px bg-surface-container-high border border-surface-container-high mt-2">
+<div class="bg-surface p-2 flex flex-col gap-1">
+<span class="font-ui-small text-ui-small text-on-surface-variant">Cost of Equity</span>
+<span class="font-data-mono text-data-mono text-on-surface">9.50%</span>
+</div>
+<div class="bg-surface p-2 flex flex-col gap-1">
+<span class="font-ui-small text-ui-small text-on-surface-variant">Term. Growth</span>
+<span class="font-data-mono text-data-mono text-on-surface">4.00%</span>
+</div>
+</div>
+<!-- Insight Box -->
+<div class="mt-auto bg-surface-container-low border border-surface-container-high p-4 flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+<span class="font-ui-small text-ui-small text-on-surface-variant uppercase tracking-widest">Model Consensus</span>
+<div class="flex items-baseline gap-3">
+<span class="font-display text-display text-emerald-400 m-0 uppercase">Undervalued</span>
+<span class="font-data-mono text-data-mono text-on-surface bg-surface border border-surface-container-high px-1.5 py-0.5">~11.2% Disc</span>
+</div>
+<p class="font-ui-small text-ui-small text-on-surface-variant leading-relaxed m-0 mt-1">
+                            Current market price trades below both DDM and RIM implied intrinsic values, providing a margin of safety for long-term accumulation.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Pane: Fundamental Tabs -->
+<section class="bg-surface flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
+<!-- Tabs Header -->
+<header class="flex border-b border-surface-container-high px-2 shrink-0 bg-surface-container-lowest/30">
+<button class="px-5 py-2.5 border-b-2 border-primary text-primary font-ui-medium text-ui-medium cursor-default uppercase tracking-wider font-semibold">
+                    Financial Statements
+                </button>
+<button class="px-5 py-2.5 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 font-ui-medium text-ui-medium cursor-pointer transition-colors uppercase tracking-wider">
+                    Multiples
+                </button>
+<button class="px-5 py-2.5 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 font-ui-medium text-ui-medium cursor-pointer transition-colors uppercase tracking-wider">
+                    Corporate Actions
+                </button>
+</header>
+<!-- Table Content -->
+<div class="flex-1 overflow-auto bg-surface">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-surface z-10 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-surface-container-high">
+<tr>
+<th class="py-2 px-4 font-ui-small text-ui-small font-semibold text-on-surface-variant w-[30%] border-r border-surface-container-high uppercase tracking-wider">Metric (IDR Billion)</th>
+<th class="py-2 px-4 font-ui-small text-ui-small font-semibold text-on-surface-variant text-right uppercase tracking-wider border-r border-surface-container-high">FY21</th>
+<th class="py-2 px-4 font-ui-small text-ui-small font-semibold text-on-surface-variant text-right uppercase tracking-wider border-r border-surface-container-high">FY22</th>
+<th class="py-2 px-4 font-ui-small text-ui-small font-semibold text-on-surface-variant text-right uppercase tracking-wider border-r border-surface-container-high">FY23</th>
+<th class="py-2 px-4 font-ui-small text-ui-small font-semibold text-primary text-right uppercase tracking-wider bg-primary/5">LTM</th>
+</tr>
+</thead>
+<tbody class="font-data-mono-sm text-data-mono-sm">
+<tr class="border-b border-surface-container-high hover:bg-surface-container-low transition-colors">
+<td class="py-2 px-4 text-on-surface border-r border-surface-container-high font-ui-small text-ui-small font-medium">Net Interest Income</td>
+<td class="py-2 px-4 text-on-surface text-right border-r border-surface-container-high">56,432</td>
+<td class="py-2 px-4 text-on-surface text-right border-r border-surface-container-high">63,890</td>
+<td class="py-2 px-4 text-on-surface text-right border-r border-surface-container-high">75,340</td>
+<td class="py-2 px-4 text-on-surface text-right bg-primary/5 font-semibold">81,200</td>
+</tr>
+<tr class="border-b border-surface-container-high hover:bg-surface-container-low transition-colors">
+<td class="py-2 px-4 text-on-surface-variant border-r border-surface-container-high font-ui-small text-ui-small pl-8">- Fee Based Income</td>
+<td class="py-2 px-4 text-on-surface-variant text-right border-r border-surface-container-high">15,200</td>
+<td class="py-2 px-4 text-on-surface-variant text-right border-r border-surface-container-high">16,800</td>
+<td class="py-2 px-4 text-on-surface-variant text-right border-r border-surface-container-high">18,450</td>
+<td class="py-2 px-4 text-on-surface-variant text-right bg-primary/5">19,100</td>
+</tr>
+<tr class="border-b border-surface-container-high hover:bg-surface-container-low transition-colors">
+<td class="py-2 px-4 text-on-surface border-r border-surface-container-high font-ui-small text-ui-small font-medium">Operating Expense</td>
+<td class="py-2 px-4 text-rose-500 text-right border-r border-surface-container-high">(30,120)</td>
+<td class="py-2 px-4 text-rose-500 text-right border-r border-surface-container-high">(32,450)</td>
+<td class="py-2 px-4 text-rose-500 text-right border-r border-surface-container-high">(35,800)</td>
+<td class="py-2 px-4 text-rose-500 text-right bg-primary/5">(37,200)</td>
+</tr>
+<tr class="border-b border-surface-container-high hover:bg-surface-container-low transition-colors bg-surface-container-lowest/50">
+<td class="py-2 px-4 text-on-surface border-r border-surface-container-high font-ui-small text-ui-small font-semibold uppercase tracking-wide">PPOP</td>
+<td class="py-2 px-4 text-on-surface text-right font-semibold border-r border-surface-container-high">41,512</td>
+<td class="py-2 px-4 text-on-surface text-right font-semibold border-r border-surface-container-high">48,240</td>
+<td class="py-2 px-4 text-on-surface text-right font-semibold border-r border-surface-container-high">57,990</td>
+<td class="py-2 px-4 text-on-surface text-right bg-primary/10 font-semibold">63,100</td>
+</tr>
+<tr class="border-b border-surface-container-high hover:bg-surface-container-low transition-colors">
+<td class="py-2 px-4 text-on-surface border-r border-surface-container-high font-ui-small text-ui-small pl-8 text-on-surface-variant">- Provision Expense</td>
+<td class="py-2 px-4 text-rose-500 text-right border-r border-surface-container-high">(8,200)</td>
+<td class="py-2 px-4 text-rose-500 text-right border-r border-surface-container-high">(4,500)</td>
+<td class="py-2 px-4 text-rose-500 text-right border-r border-surface-container-high">(2,100)</td>
+<td class="py-2 px-4 text-rose-500 text-right bg-primary/5">(1,800)</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest/80">
+<td class="py-2.5 px-4 text-emerald-400 border-r border-surface-container-high font-ui-medium text-ui-medium font-bold uppercase tracking-wider">Net Income</td>
+<td class="py-2.5 px-4 text-emerald-400 text-right font-bold border-r border-surface-container-high">31,422</td>
+<td class="py-2.5 px-4 text-emerald-400 text-right font-bold border-r border-surface-container-high">40,736</td>
+<td class="py-2.5 px-4 text-emerald-400 text-right font-bold border-r border-surface-container-high">48,639</td>
+<td class="py-2.5 px-4 text-emerald-400 text-right bg-primary/10 font-bold">51,400</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</body></html>
