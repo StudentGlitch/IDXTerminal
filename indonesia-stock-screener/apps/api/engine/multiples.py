@@ -1,6 +1,4 @@
 class MultiplesModel:
-    def __init__(self):
-        pass
 
     def calculate(self, ticker: str, current_price: float, eps: float, ebitda: float, ev: float, peer_avg_pe: float = 15.0, peer_avg_ev_ebitda: float = 10.0):
         """
