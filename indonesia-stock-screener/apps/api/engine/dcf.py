@@ -1,3 +1,6 @@
+import numpy as np
+import pandas as pd
+
 class DCFModel:
     def __init__(self, wacc: float = 0.10, terminal_growth_rate: float = 0.02):
         self.wacc = wacc
