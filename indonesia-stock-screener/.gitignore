@@ -6,6 +6,4 @@ venv/
 env/
 .env
 *.db
-
-# Pytest
 .pytest_cache/
