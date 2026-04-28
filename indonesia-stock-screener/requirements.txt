@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+sqlmodel
+numpy
+pandas
+yfinance
+defusedxml
+pytest
