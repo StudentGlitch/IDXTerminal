@@ -21,25 +21,16 @@ class DCFModel:
 
         # Calculate Present Value of Free Cash Flows
         pv_fcf = 0
-        try:
-            for i, fcf in enumerate(fcf_projections, start=1):
-                pv_fcf += fcf / ((1 + self.wacc) ** i)
-        except ZeroDivisionError:
-            pass
+        for i, fcf in enumerate(fcf_projections, start=1):
+            pv_fcf += fcf / ((1 + self.wacc) ** i)
         
         # Calculate Terminal Value
         # TV = FCF_n * (1 + g) / (WACC - g)
         last_fcf = fcf_projections[-1]
-        try:
-            terminal_value = last_fcf * (1 + self.terminal_growth_rate) / (self.wacc - self.terminal_growth_rate)
-        except ZeroDivisionError:
-            terminal_value = 0.0
+        terminal_value = last_fcf * (1 + self.terminal_growth_rate) / (self.wacc - self.terminal_growth_rate)
         
         # Present Value of Terminal Value
-        try:
-            pv_tv = terminal_value / ((1 + self.wacc) ** len(fcf_projections))
-        except ZeroDivisionError:
-            pv_tv = 0.0
+        pv_tv = terminal_value / ((1 + self.wacc) ** len(fcf_projections))
         
         # Enterprise Value
         enterprise_value = pv_fcf + pv_tv
@@ -48,10 +39,7 @@ class DCFModel:
         equity_value = enterprise_value - net_debt
         
         # Value per Share
-        try:
-            value_per_share = equity_value / shares_outstanding
-        except ZeroDivisionError:
-            value_per_share = 0.0
+        value_per_share = equity_value / shares_outstanding
         
         return max(0.0, value_per_share)
 
