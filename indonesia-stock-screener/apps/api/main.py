@@ -17,8 +17,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"], # Next.js frontend
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "Accept"],
 )
 
 @app.on_event("startup")
