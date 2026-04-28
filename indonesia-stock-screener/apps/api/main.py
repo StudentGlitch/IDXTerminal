@@ -1,5 +1,6 @@
 import sys
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
@@ -11,7 +12,12 @@ from packages.shared import models
 from database import engine
 from routers import screener, valuation
 
-app = FastAPI(title="Indonesia Stock Screener API")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    SQLModel.metadata.create_all(engine)
+    yield
+
+app = FastAPI(title="Indonesia Stock Screener API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,10 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.on_event("startup")
-def on_startup():
-    SQLModel.metadata.create_all(engine)
 
 app.include_router(screener.router, prefix="/api/screener", tags=["screener"])
 app.include_router(valuation.router, prefix="/api/valuation", tags=["valuation"])
