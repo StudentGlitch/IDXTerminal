@@ -1,4 +1,5 @@
-from bs4 import BeautifulSoup
+import defusedxml.ElementTree as ET
+from defusedxml.common import DefusedXmlException
 import os
 import random
 
@@ -43,34 +44,52 @@ class iXBRLParser:
         with open(filepath, 'r', encoding='utf-8') as f:
             content = f.read()
 
-        soup = BeautifulSoup(content, "lxml-xml")
-        
-        # Exact taxonomy tags vary by IDX release
-        mapping = {
-            "idx:TotalRevenue": "total_revenue",
-            "idx:ProfitLoss": "net_income",
-            "idx:NetCashFlowsFromOperatingActivities": "operating_cash_flow",
-            "idx:TotalAssets": "total_assets",
-            "idx:TotalEquity": "total_equity"
-        }
+        try:
+            root = ET.fromstring(content)
+        except DefusedXmlException as e:
+            print(f"[Parser] Security error parsing XML for {ticker}: {e}")
+            root = None
+        except ET.ParseError as e:
+            print(f"[Parser] Parse error for {ticker}: {e}")
+            root = None
 
         fundamentals = {}
-        for tag, key in mapping.items():
-            elements = soup.find_all(attrs={"name": tag})
-            if elements:
-                value_str = elements[0].text.strip().replace(',', '')
-                try:
-                    fundamentals[key] = float(value_str)
-                except ValueError:
+        if root is not None:
+            # Exact taxonomy tags vary by IDX release
+            mapping = {
+                "idx:TotalRevenue": "total_revenue",
+                "idx:ProfitLoss": "net_income",
+                "idx:NetCashFlowsFromOperatingActivities": "operating_cash_flow",
+                "idx:TotalAssets": "total_assets",
+                "idx:TotalEquity": "total_equity"
+            }
+
+            for tag, key in mapping.items():
+                elements = root.findall(f".//*[@name='{tag}']")
+                if elements and elements[0].text:
+                    value_str = elements[0].text.strip().replace(',', '')
+                    try:
+                        fundamentals[key] = float(value_str)
+                    except ValueError:
+                        fundamentals[key] = 0.0
+                else:
                     fundamentals[key] = 0.0
+
+            shares = root.findall(".//*[@name='idx:NumberOfSharesOutstanding']")
+            if shares and shares[0].text:
+                 fundamentals["shares_outstanding"] = float(shares[0].text.strip().replace(',', ''))
             else:
-                fundamentals[key] = 0.0
-        
-        shares = soup.find_all(attrs={"name": "idx:NumberOfSharesOutstanding"})
-        if shares:
-             fundamentals["shares_outstanding"] = float(shares[0].text.strip().replace(',', ''))
+                 fundamentals["shares_outstanding"] = 0.0
         else:
-             fundamentals["shares_outstanding"] = 0.0
+            # Fallback if parsing fails
+            fundamentals = {
+                "total_revenue": 0.0,
+                "net_income": 0.0,
+                "operating_cash_flow": 0.0,
+                "total_assets": 0.0,
+                "total_equity": 0.0,
+                "shares_outstanding": 0.0
+            }
 
         return {
             "ticker": ticker,
