@@ -6,8 +6,15 @@ class MultiplesModel:
         """
         Calculate valuation multiples and implied prices based on peers.
         """
-        forward_pe = current_price / eps if eps > 0 else None
-        ev_ebitda = ev / ebitda if ebitda > 0 else None
+        try:
+            forward_pe = current_price / eps if eps > 0 else None
+        except ZeroDivisionError:
+            forward_pe = None
+
+        try:
+            ev_ebitda = ev / ebitda if ebitda > 0 else None
+        except ZeroDivisionError:
+            ev_ebitda = None
         
         implied_price_pe = eps * peer_avg_pe if eps > 0 else 0.0
         # Implied EV from EBITDA multiple

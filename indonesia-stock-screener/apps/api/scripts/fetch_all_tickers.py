@@ -1,5 +1,6 @@
 import os
 import json
+from loguru import logger
 import random
 import requests
 
@@ -29,7 +30,7 @@ def get_headers() -> dict:
     }
 
 def fetch_idx_tickers():
-    print("Fetching IDX tickers dynamically using your IDX API logic...")
+    logger.info("Fetching IDX tickers dynamically using your IDX API logic...")
     
     try:
         resp = requests.get(_IDX_API_URL, headers=get_headers(), timeout=30)
@@ -40,10 +41,10 @@ def fetch_idx_tickers():
         tickers = [r.get("StockCode", "").strip() for r in records if r.get("StockCode", "").strip()]
         
         if not tickers:
-            print("IDX API returned 0 records. Cloudflare might be blocking the request locally.")
+            logger.warning("IDX API returned 0 records. Cloudflare might be blocking the request locally.")
             return
 
-        print(f"Successfully fetched {len(tickers)} tickers from the dynamic source!")
+        logger.info(f"Successfully fetched {len(tickers)} tickers from the dynamic source!")
         
         # Format the new config content
         config_content = f'''# Target tickers for Full Market (Auto-fetched dynamically)
@@ -55,11 +56,11 @@ TARGET_TICKERS = {json.dumps(tickers, indent=4)}
         with open(CONFIG_PATH, 'w') as f:
             f.write(config_content)
             
-        print(f"Success! {CONFIG_PATH} has been updated with the full market list.")
+        logger.info(f"Success! {CONFIG_PATH} has been updated with the full market list.")
 
     except Exception as e:
-        print(f"Failed to fetch dynamically from IDX API: {e}")
-        print("\nNote: If this fails locally with a 403, Cloudflare is blocking you. It will likely work flawlessly on your VPS as you tested before!")
+        logger.error(f"Failed to fetch dynamically from IDX API: {e}")
+        logger.info("\nNote: If this fails locally with a 403, Cloudflare is blocking you. It will likely work flawlessly on your VPS as you tested before!")
 
 if __name__ == "__main__":
     fetch_idx_tickers()
