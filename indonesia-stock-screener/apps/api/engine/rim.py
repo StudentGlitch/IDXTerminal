@@ -1,5 +1,3 @@
-import numpy as np
-
 class RIMModel:
     def __init__(self, cost_of_equity: float = 0.10):
         self.cost_of_equity = cost_of_equity
