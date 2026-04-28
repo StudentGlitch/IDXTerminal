@@ -24,7 +24,10 @@ class RIMModel:
             residual_income = eps - (self.cost_of_equity * current_bvps)
             
             # Present Value of Residual Income
-            pv_ri = residual_income / ((1 + self.cost_of_equity) ** i)
+            try:
+                pv_ri = residual_income / ((1 + self.cost_of_equity) ** i)
+            except ZeroDivisionError:
+                pv_ri = 0.0
             
             intrinsic_value += pv_ri
             

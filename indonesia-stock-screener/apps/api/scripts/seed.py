@@ -1,6 +1,7 @@
 import sys
 import os
 import asyncio
+from loguru import logger
 
 # Ensure paths are correct so we can import from apps/ and packages/
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../')))
@@ -16,17 +17,17 @@ from apps.api.engine.rim import RIMModel
 from apps.api.scripts.config import TARGET_TICKERS
 
 async def process_ticker(ticker: str, market_api: MarketAPI, scraper: IDXScraper, parser: iXBRLParser):
-    print(f"\n[{ticker}] Starting ETL Pipeline...")
+    logger.info(f"[{ticker}] Starting ETL Pipeline...")
     
     # 1. Fetch Market Data
-    print(f"[{ticker}] Fetching Market Data via yfinance...")
+    logger.info(f"[{ticker}] Fetching Market Data via yfinance...")
     market_data = market_api.fetch_market_data(ticker)
     
     # 2. Fetch Fundamentals (Crawler)
-    print(f"[{ticker}] Scraping IDX for Financial Reports...")
+    logger.info(f"[{ticker}] Scraping IDX for Financial Reports...")
     report_link = await scraper.fetch_financial_report_link(ticker)
     
-    print(f"[{ticker}] Parsing iXBRL...")
+    logger.info(f"[{ticker}] Parsing iXBRL...")
     xml_path = await parser.download_and_extract(report_link) if report_link else "mocked.xml"
     fundamental_data = parser.parse_document(ticker, xml_path)
     
@@ -41,7 +42,7 @@ async def process_ticker(ticker: str, market_api: MarketAPI, scraper: IDXScraper
     }
     
     # 3. Valuation Engines
-    print(f"[{ticker}] Running Valuation Models...")
+    logger.info(f"[{ticker}] Running Valuation Models...")
     current_price = stock_data["current_price"] or 1.0
     shares_out = fundamentals.get("shares_outstanding", 10_000_000_000)
     if shares_out == 0: shares_out = 10_000_000_000
@@ -73,11 +74,11 @@ async def process_ticker(ticker: str, market_api: MarketAPI, scraper: IDXScraper
         "altman_z_score": 3.5,
     }
     
-    print(f"[{ticker}] ETL Complete. DCF: {metrics_data['dcf_value']}, RIM: {metrics_data['rim_value']}")
+    logger.info(f"[{ticker}] ETL Complete. DCF: {metrics_data['dcf_value']}, RIM: {metrics_data['rim_value']}")
     return stock_data, metrics_data
 
 async def main():
-    print("Initializing Database...")
+    logger.info("Initializing Database...")
     init_db()
     
     market_api = MarketAPI()
@@ -92,7 +93,7 @@ async def main():
         all_stocks_data.append(stock_data)
         all_metrics_data.append(metrics_data)
 
-    print("\nSaving all data to Database...")
+    logger.info("Saving all data to Database...")
     with Session(engine) as session:
         # Batch Stock Operations
         tickers = [s["ticker"] for s in all_stocks_data]
@@ -132,7 +133,7 @@ async def main():
 
         session.commit()
 
-    print("Database save complete.")
+    logger.info("Database save complete.")
 
 if __name__ == "__main__":
     asyncio.run(main())
