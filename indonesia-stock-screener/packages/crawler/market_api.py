@@ -30,14 +30,15 @@ class MarketAPI:
             if not hist.empty:
                 # Reset index to get Date as a column
                 hist_reset = hist.reset_index()
-                hist_reset["time"] = hist_reset["Date"].dt.strftime("%Y-%m-%d")
-                historical_data = hist_reset[["time", "Open", "High", "Low", "Close", "Volume"]].rename(columns={
-                    "Open": "open",
-                    "High": "high",
-                    "Low": "low",
-                    "Close": "close",
-                    "Volume": "volume"
-                }).to_dict("records")
+                for _, row in hist_reset.iterrows():
+                    historical_data.append({
+                        "time": row["Date"].strftime("%Y-%m-%d"),
+                        "open": row["Open"],
+                        "high": row["High"],
+                        "low": row["Low"],
+                        "close": row["Close"],
+                        "volume": row["Volume"]
+                    })
 
             return {
                 "ticker": ticker,

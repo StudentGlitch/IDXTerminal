@@ -1,9 +1,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-*.log
-venv/
-env/
-.env
-*.db
+
+# Pytest
 .pytest_cache/
